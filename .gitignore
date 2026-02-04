@@ -1,1 +1,15 @@
 venv/
+
+artifacts/models/*.pkl
+artifacts/*.csv
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+data/raw/*
+data/processed/*
+
+

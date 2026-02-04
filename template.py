@@ -49,7 +49,6 @@ list_of_files = [
 
     "README.md",
     "main.py",
-    ".github/workflows/.gitkeep"
 ]
 
 
