@@ -1,5 +1,12 @@
 pandas
-numpy == 1.20
+numpy
 matplotlib
 utilsforecast
 statsforecast
+seaborn 
+statsmodels 
+prophet 
+xgboost 
+scikit-learn 
+tensorflow 
+openpyxl
