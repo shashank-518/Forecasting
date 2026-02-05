@@ -12,3 +12,5 @@ tensorflow
 openpyxl
 fastapi
 uvicorn
+streamlit
+requests

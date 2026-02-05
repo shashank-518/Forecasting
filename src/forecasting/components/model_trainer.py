@@ -17,9 +17,7 @@ class ModelTrainer:
         self.feature_engineer = feature_engineer
 
 
-    # =====================================================
-    # MAIN TRAIN FUNCTION
-    # =====================================================
+   
     def train_all_models(self, ts, forecast_horizon=8):
 
         train_ts = ts[:-forecast_horizon]
@@ -29,17 +27,13 @@ class ModelTrainer:
         trained_models = {}   # ✅ ADD THIS
 
 
-        # =================================================
-        # ARIMA
-        # =================================================
+        
         arima_model = ARIMA(train_ts, order=(2,1,2)).fit()
         forecasts["ARIMA"] = arima_model.forecast(forecast_horizon).values
         trained_models["ARIMA"] = arima_model
 
 
-        # =================================================
-        # SARIMA
-        # =================================================
+        
         sarima_model = SARIMAX(
             train_ts,
             order=(2,1,2),
@@ -50,9 +44,7 @@ class ModelTrainer:
         trained_models["SARIMA"] = sarima_model
 
 
-        # =================================================
-        # PROPHET
-        # =================================================
+        
         prophet_model = Prophet(weekly_seasonality=True)
 
         p_df = ts.reset_index()
@@ -67,9 +59,7 @@ class ModelTrainer:
         trained_models["Prophet"] = prophet_model
 
 
-        # =================================================
-        # XGBOOST
-        # =================================================
+        
         feat = self.feature_engineer.create_features(ts)
 
         X = feat.drop("sales", axis=1)
@@ -87,9 +77,7 @@ class ModelTrainer:
         trained_models["XGB"] = xgb_model
 
 
-        # =================================================
-        # LSTM
-        # =================================================
+        
         scaler = MinMaxScaler()
 
         scaled = scaler.fit_transform(ts.values.reshape(-1,1))
@@ -122,7 +110,4 @@ class ModelTrainer:
         trained_models["LSTM"] = lstm_model
 
 
-        # =================================================
-        # RETURN ALL 3
-        # =================================================
         return test_ts.values, forecasts, trained_models

@@ -21,7 +21,7 @@ class TrainingPipeline:
         self.data_path = data_path
         self.forecast_horizon = forecast_horizon
 
-        # components
+        
         self.ingestion = DataIngestion(self.data_path)
         self.validator = DataValidation()
         self.preprocessor = Preprocessor()
@@ -35,45 +35,33 @@ class TrainingPipeline:
 
         print("Starting Training Pipeline...")
 
-        # ================================
-        # Load
-        # ================================
+
         df = self.ingestion.load_data()
 
-        # ================================
-        # Validate
-        # ================================
+        
         self.validator.validate(df)
 
-        # ================================
-        # Clean
-        # ================================
+        
         df = self.preprocessor.clean(df)
 
         states = df["state"].unique()
 
         summary_rows = []
 
-        # ================================
-        # Train per state
-        # ================================
+       
         for state in states:
 
             print(f"Training state: {state}")
 
             ts = self.preprocessor.weekly_series(df, state)
 
-            # -----------------------------
-            # Train models
-            # -----------------------------
+           
             y_true, forecasts, trained_models = self.trainer.train_all_models(
                 ts,
                 self.forecast_horizon
             )
 
-            # -----------------------------
-            # Select best + save pickle
-            # -----------------------------
+            
             best_model_name, metrics_dict = self.selector.select_and_save(
                 state,
                 y_true,
@@ -81,9 +69,7 @@ class TrainingPipeline:
                 trained_models
             )
 
-            # -----------------------------
-            # Save metrics summary
-            # -----------------------------
+            
             best_metrics = metrics_dict[best_model_name]
 
             summary_rows.append([
@@ -95,9 +81,7 @@ class TrainingPipeline:
             ])
 
 
-        # ================================
-        # Save summary CSV
-        # ================================
+        
         os.makedirs("artifacts", exist_ok=True)
 
         summary_df = pd.DataFrame(
