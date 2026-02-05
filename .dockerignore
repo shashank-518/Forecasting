@@ -1,0 +1,12 @@
+venv
+__pycache__
+*.pyc
+.git
+.ipynb_checkpoints
+Research_Notebook
+Outputs
+CSV_MODELS
+data/raw
+data/processed
+
+artifacts/models/*.pkl
