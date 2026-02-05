@@ -5,9 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# ======================================================
-# CONFIG
-# ======================================================
+
 API_URL = "http://127.0.0.1:8000"
 
 st.set_page_config(
@@ -19,9 +17,6 @@ st.title("📈 State Sales Forecast Dashboard")
 st.markdown("Forecast next 8 weeks using the best ML model per state")
 
 
-# ======================================================
-# SIDEBAR
-# ======================================================
 st.sidebar.header("Controls")
 
 state = st.sidebar.text_input("Enter State Name", "Texas")
@@ -29,25 +24,19 @@ state = st.sidebar.text_input("Enter State Name", "Texas")
 forecast_btn = st.sidebar.button("Generate Forecast")
 
 
-# ======================================================
-# HELPER → Professional Smart Chart
-# ======================================================
+
 def plot_forecast_chart(df):
 
     df["date"] = pd.to_datetime(df["date"])
     df = df.set_index("date")
 
-    # ----------------------------------
-    # convert to millions
-    # ----------------------------------
+    
     y = df["forecast"] / 1_000_000
 
     ymin, ymax = y.min(), y.max()
     range_ = ymax - ymin
 
-    # ----------------------------------
-    # dynamic tick step (smart scaling)
-    # ----------------------------------
+    
     if range_ < 20:
         step = 2
     elif range_ < 50:
@@ -62,19 +51,17 @@ def plot_forecast_chart(df):
 
     ticks = np.arange(lower, upper + step, step)
 
-    # ----------------------------------
-    # Plot
-    # ----------------------------------
+   
     fig, ax = plt.subplots(figsize=(10,5))
 
-    # line
+    
     ax.plot(
         df.index,
         y,
         linewidth=2
     )
 
-    # colored weekly points
+    
     ax.scatter(
         df.index,
         y,
@@ -95,9 +82,7 @@ def plot_forecast_chart(df):
     st.pyplot(fig)
 
 
-# ======================================================
-# MAIN LOGIC
-# ======================================================
+
 if forecast_btn:
 
     with st.spinner("Fetching prediction from backend..."):
@@ -114,9 +99,9 @@ if forecast_btn:
                 model_used = data["model_used"]
                 forecast_df = pd.DataFrame(data["forecast"])
 
-                # ==================================================
-                # METRICS
-                # ==================================================
+                forecast_df["date"] = pd.to_datetime(forecast_df["date"]).dt.strftime("%d-%m-%Y")
+
+                
                 st.success(f"✅ Model Used: {model_used}")
 
                 col1, col2, col3 = st.columns(3)
@@ -137,9 +122,7 @@ if forecast_btn:
                 )
 
 
-                # ==================================================
-                # TABLE
-                # ==================================================
+                
                 st.subheader("📋 Forecast Table")
 
                 st.dataframe(
@@ -148,9 +131,7 @@ if forecast_btn:
                 )
 
 
-                # ==================================================
-                # DOWNLOAD
-                # ==================================================
+                
                 csv = forecast_df.to_csv(index=False).encode("utf-8")
 
                 st.download_button(
@@ -161,20 +142,11 @@ if forecast_btn:
                 )
 
 
-                # ==================================================
-                # CHART
-                # ==================================================
+              
                 st.subheader("📊 Forecast Chart")
 
-                plot_forecast_chart(forecast_df)
+                plot_forecast_chart(pd.DataFrame(data["forecast"]))
 
 
         except Exception as e:
             st.error(str(e))
-
-
-# ======================================================
-# FOOTER
-# ======================================================
-st.markdown("---")
-st.caption("Built with FastAPI + Streamlit + ML Forecasting Pipeline")

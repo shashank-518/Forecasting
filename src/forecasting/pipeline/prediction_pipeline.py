@@ -5,7 +5,7 @@ import numpy as np
 
 from prophet import Prophet
 import xgboost as xgb
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential # type: ignore
 
 from src.forecasting.components.data_ingestion import DataIngestion
 from src.forecasting.components.preprocessing import Preprocessor
@@ -97,7 +97,7 @@ class PredictionPipeline:
 
         from prophet import Prophet
         import xgboost as xgb
-        from tensorflow.keras.models import Sequential
+        from tensorflow.keras.models import Sequential # type: ignore
 
         if model.__class__.__module__.startswith("statsmodels"):
             return "ARIMA/SARIMA"

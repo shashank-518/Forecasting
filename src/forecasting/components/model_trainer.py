@@ -7,8 +7,8 @@ from prophet import Prophet
 
 from sklearn.preprocessing import MinMaxScaler
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import LSTM, Dense # type: ignore
 
 
 class ModelTrainer:
@@ -24,7 +24,7 @@ class ModelTrainer:
         test_ts  = ts[-forecast_horizon:]
 
         forecasts = {}
-        trained_models = {}   # ✅ ADD THIS
+        trained_models = {}   
 
 
         
